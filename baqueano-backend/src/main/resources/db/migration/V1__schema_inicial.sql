@@ -30,7 +30,7 @@ CREATE TABLE usuarios (
     perfil_id       BIGINT       NOT NULL,
     activo          BOOLEAN      NOT NULL DEFAULT TRUE,
     ultimo_login    DATETIME     NULL,
-    intentos_fallidos TINYINT    NOT NULL DEFAULT 0,
+    intentos_fallidos INT        NOT NULL DEFAULT 0,
     fecha_creacion       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     usuario_creacion     VARCHAR(50),
