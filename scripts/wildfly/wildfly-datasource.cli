@@ -1,0 +1,33 @@
+# ============================================================
+# Script de jboss-cli: registra el driver MySQL y crea el datasource
+# BaqueanoDS via JNDI java:jboss/datasources/BaqueanoDS.
+#
+# Pre-requisitos: el modulo com.mysql tiene que estar instalado
+# (ver scripts/wildfly/setup-mysql-module.ps1).
+#
+# Uso (en otra terminal, con WildFly corriendo):
+#   & "$env:WILDFLY_HOME\bin\jboss-cli.bat" --connect --file=scripts\wildfly\wildfly-datasource.cli
+# ============================================================
+
+# 1. Registrar el driver
+/subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql, driver-module-name=com.mysql, driver-class-name=com.mysql.cj.jdbc.Driver)
+
+# 2. Crear el datasource (la URL escapa los & como \&)
+data-source add \
+  --name=BaqueanoDS \
+  --jndi-name=java:jboss/datasources/BaqueanoDS \
+  --driver-name=mysql \
+  --connection-url=jdbc:mysql://localhost:3306/baqueano?useSSL=false\&serverTimezone=America/Argentina/Buenos_Aires \
+  --user-name=baqueano \
+  --password=baqueano \
+  --min-pool-size=5 \
+  --max-pool-size=50 \
+  --enabled=true \
+  --use-java-context=true \
+  --jta=true
+
+# 3. Validar y persistir
+:test-connection-in-pool
+
+# 4. Reload del server para que tome los cambios
+reload

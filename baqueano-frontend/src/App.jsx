@@ -10,10 +10,14 @@ import PerfilesPage from './pages/perfiles/PerfilesPage.jsx';
 import ParametrosPage from './pages/parametros/ParametrosPage.jsx';
 import ContactosPage from './pages/contactos/ContactosPage.jsx';
 
+// basename: en dev BASE_URL = '/'; en prod (vite build) = '/baqueano/'.
+// React Router quiere basename sin barra final.
+const BASENAME = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || '/';
+
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={BASENAME}>
         <Routes>
           <Route path="/login" element={<Login />} />
 

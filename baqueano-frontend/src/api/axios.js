@@ -52,7 +52,8 @@ api.interceptors.response.use(
         refreshing = null;
         tokenStore.clear();
         if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+          // BASE_URL incluye el contexto del WAR en prod (/baqueano/)
+          window.location.href = (import.meta.env.BASE_URL || '/') + 'login';
         }
         return Promise.reject(refreshError);
       }

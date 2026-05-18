@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Modulo de WildFly que expone el driver MySQL al subsistema datasources.
+  Copialo (junto al .jar del driver) a:
+    $WILDFLY_HOME/modules/com/mysql/main/
+
+  Usado por wildfly-datasource.cli.
+-->
+<module xmlns="urn:jboss:module:1.9" name="com.mysql">
+    <resources>
+        <resource-root path="mysql-connector-j-9.3.0.jar"/>
+    </resources>
+    <dependencies>
+        <module name="javax.api"/>
+        <module name="javax.transaction.api"/>
+    </dependencies>
+</module>

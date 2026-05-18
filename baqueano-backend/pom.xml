@@ -131,4 +131,76 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!--
+          Perfil prod: orquesta el build del frontend (npm ci + npm run build)
+          via frontend-maven-plugin contra ../baqueano-frontend, y copia el dist
+          dentro de target/classes/static para que quede embebido en el WAR.
+
+          Uso: mvn -Pprod clean package
+        -->
+        <profile>
+            <id>prod</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>${frontend-maven-plugin.version}</version>
+                        <configuration>
+                            <workingDirectory>../baqueano-frontend</workingDirectory>
+                            <installDirectory>${project.build.directory}/node-runtime</installDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install-node-and-npm</id>
+                                <goals><goal>install-node-and-npm</goal></goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <nodeVersion>v24.14.1</nodeVersion>
+                                    <npmVersion>11.11.0</npmVersion>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm-ci</id>
+                                <goals><goal>npm</goal></goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <arguments>ci</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm-build</id>
+                                <goals><goal>npm</goal></goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <arguments>run build</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-frontend-dist</id>
+                                <phase>process-resources</phase>
+                                <goals><goal>copy-resources</goal></goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>../baqueano-frontend/dist</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
