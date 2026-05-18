@@ -27,6 +27,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JsonAuthHandlers jsonAuthHandlers;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -54,6 +55,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/**").authenticated()
                         // Resto (estaticos del frontend cuando se sirve desde el WAR)
                         .anyRequest().permitAll()
+                )
+                .exceptionHandling(eh -> eh
+                        .authenticationEntryPoint(jsonAuthHandlers.authenticationEntryPoint())
+                        .accessDeniedHandler(jsonAuthHandlers.accessDeniedHandler())
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

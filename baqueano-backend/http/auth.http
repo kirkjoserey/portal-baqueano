@@ -17,14 +17,45 @@ Content-Type: application/json
 @access = {{login.response.body.accessToken}}
 @refresh = {{login.response.body.refreshToken}}
 
-### 3. Llamada con Bearer token (espera 404 hasta Fase 6, cuando agreguemos los controllers de las entidades)
+### 3. Llamada con Bearer token (200, devuelve Page<UsuarioListItemDTO>)
 GET {{host}}/usuarios
 Authorization: Bearer {{access}}
 
 ###
 
-### 4. Llamada sin token contra endpoint protegido (espera 403 hasta Fase 6, donde se devolvera 401)
+### 4. Llamada sin token contra endpoint protegido (401 con code UNAUTHENTICATED)
 GET {{host}}/usuarios
+
+###
+
+### 4b. Menu dinamico del perfil del usuario logueado
+GET {{host}}/menu/mio
+Authorization: Bearer {{access}}
+
+###
+
+### 4c. Resumen del dashboard
+GET {{host}}/dashboard/resumen
+Authorization: Bearer {{access}}
+
+###
+
+### 4d. Crear un perfil (requiere permiso CREAR /perfiles)
+POST {{host}}/perfiles
+Authorization: Bearer {{access}}
+Content-Type: application/json
+
+{
+  "nombre": "PRUEBA",
+  "descripcion": "Perfil creado desde http file",
+  "activo": true
+}
+
+###
+
+### 4e. Listar contactos (requiere permiso VER /contactos)
+GET {{host}}/contactos
+Authorization: Bearer {{access}}
 
 ###
 
