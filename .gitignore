@@ -1,0 +1,54 @@
+# ============================================================
+# Maven
+# ============================================================
+target/
+*.versionsBackup
+.flattened-pom.xml
+dependency-reduced-pom.xml
+
+# ============================================================
+# Node / Vite
+# ============================================================
+baqueano-frontend/node_modules/
+baqueano-frontend/dist/
+baqueano-frontend/.vite/
+baqueano-frontend/npm-debug.log*
+baqueano-frontend/yarn-debug.log*
+baqueano-frontend/yarn-error.log*
+
+# ============================================================
+# IDE
+# ============================================================
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+*.swp
+
+# ============================================================
+# OS
+# ============================================================
+Thumbs.db
+.DS_Store
+
+# ============================================================
+# Logs locales
+# ============================================================
+*.log
+logs/
+
+# ============================================================
+# Build estatico copiado por Maven (lo regenera el perfil prod)
+# ============================================================
+baqueano-backend/src/main/resources/static/
+
+# ============================================================
+# Secretos / configuracion local (nunca commitear)
+# ============================================================
+application-local.yml
+application-local.yaml
+.env
+.env.local
+*.env.local
