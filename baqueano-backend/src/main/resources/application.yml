@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: baqueano
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+server:
+  servlet:
+    context-path: /baqueano
