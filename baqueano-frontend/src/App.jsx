@@ -5,7 +5,10 @@ import ProtectedRoute from './auth/ProtectedRoute.jsx';
 import Layout from './components/layout/Layout.jsx';
 import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
-import Placeholder from './pages/Placeholder.jsx';
+import UsuariosPage from './pages/usuarios/UsuariosPage.jsx';
+import PerfilesPage from './pages/perfiles/PerfilesPage.jsx';
+import ParametrosPage from './pages/parametros/ParametrosPage.jsx';
+import ContactosPage from './pages/contactos/ContactosPage.jsx';
 
 export default function App() {
   return (
@@ -18,10 +21,10 @@ export default function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/usuarios" element={<Placeholder />} />
-              <Route path="/perfiles" element={<Placeholder />} />
-              <Route path="/parametros" element={<Placeholder />} />
-              <Route path="/contactos" element={<Placeholder />} />
+              <Route path="/usuarios" element={<UsuariosPage />} />
+              <Route path="/perfiles" element={<PerfilesPage />} />
+              <Route path="/parametros" element={<ParametrosPage />} />
+              <Route path="/contactos" element={<ContactosPage />} />
             </Route>
           </Route>
 
