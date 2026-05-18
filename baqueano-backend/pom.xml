@@ -46,6 +46,26 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- MapStruct (la version del processor viene del pluginManagement padre) -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <!-- Cache abstraction (ConcurrentMapCacheManager por defecto) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <!-- Solo el modulo crypto de Spring Security: trae BCryptPasswordEncoder.
+             En Fase 5 se reemplaza por spring-boot-starter-security completo. -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
         <!-- Lombok: solo en tiempo de compilacion -->
         <dependency>
             <groupId>org.projectlombok</groupId>
