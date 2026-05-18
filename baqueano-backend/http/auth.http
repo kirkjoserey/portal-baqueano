@@ -1,0 +1,72 @@
+### Variables (dev: backend en 8081)
+@host = http://localhost:8081/baqueano/api/v1
+
+### 1. Login con credenciales validas
+# @name login
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+###
+
+### 2. Capturar access token y refresh token de la respuesta anterior
+@access = {{login.response.body.accessToken}}
+@refresh = {{login.response.body.refreshToken}}
+
+### 3. Llamada con Bearer token (espera 404 hasta Fase 6, cuando agreguemos los controllers de las entidades)
+GET {{host}}/usuarios
+Authorization: Bearer {{access}}
+
+###
+
+### 4. Llamada sin token contra endpoint protegido (espera 403 hasta Fase 6, donde se devolvera 401)
+GET {{host}}/usuarios
+
+###
+
+### 5. Refresh: emite nuevo access usando el refresh token
+POST {{host}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refresh}}"
+}
+
+###
+
+### 6. Logout: revoca el refresh token
+POST {{host}}/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refresh}}"
+}
+
+###
+
+### 7. Login con password incorrecto (espera 403/401)
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "WRONG"
+}
+
+###
+
+### 8. Alta publica de contacto (no requiere token)
+POST {{host}}/contactos
+Content-Type: application/json
+
+{
+  "nombre": "Pepe Prueba",
+  "email": "pepe@example.com",
+  "telefono": "1144556677",
+  "asunto": "Consulta de prueba",
+  "mensaje": "Mensaje desde el archivo .http"
+}

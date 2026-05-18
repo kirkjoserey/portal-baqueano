@@ -18,3 +18,12 @@ spring:
 server:
   servlet:
     context-path: /baqueano
+
+baqueano:
+  security:
+    jwt:
+      # En produccion exportar JWT_SECRET con minimo 256 bits aleatorios.
+      # El default es solo para que la app levante en dev/test sin configuracion.
+      secret: ${JWT_SECRET:cambiar-en-produccion-minimo-256-bits-de-entropia-aleatoria-aleatoria}
+      expiration-ms: 1800000           # 30 minutos
+      refresh-expiration-ms: 86400000  # 24 horas
