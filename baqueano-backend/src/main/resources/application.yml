@@ -3,6 +3,17 @@ spring:
     name: baqueano
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
+  jpa:
+    hibernate:
+      ddl-auto: validate          # el schema lo maneja Flyway exclusivamente
+    properties:
+      hibernate:
+        format_sql: true          # dialect se autodetecta a partir del driver MySQL
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
 
 server:
   servlet:

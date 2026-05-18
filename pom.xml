@@ -30,8 +30,10 @@
         <spring-boot.version>3.5.14</spring-boot.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <jjwt.version>0.13.0</jjwt.version>
+        <!-- flyway.version y mysql.version: nombres que usa el BOM de Spring Boot,
+             redefinidos aqui para forzar las versiones verificadas en Fase 0 -->
         <flyway.version>12.6.1</flyway.version>
-        <mysql-connector.version>9.3.0</mysql-connector.version>
+        <mysql.version>9.3.0</mysql.version>
         <springdoc.version>3.0.3</springdoc.version>
 
         <!-- Versiones de plugins -->

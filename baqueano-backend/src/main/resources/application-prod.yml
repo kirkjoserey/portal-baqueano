@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    jndi-name: java:jboss/datasources/BaqueanoDS
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    root: INFO
+    ar.com.baqueano: INFO

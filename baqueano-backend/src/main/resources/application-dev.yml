@@ -1,0 +1,14 @@
+server:
+  port: ${BAQUEANO_DEV_PORT:8081}     # 8080 lo usa WildFly local; cambiar via env var si hace falta
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/baqueano?useSSL=false&serverTimezone=America/Argentina/Buenos_Aires&characterEncoding=utf8
+    username: ${DB_USER:baqueano}
+    password: ${DB_PASS:baqueano}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  level:
+    ar.com.baqueano: DEBUG
+    org.flywaydb: INFO
