@@ -1,0 +1,1325 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Portal Baqueano — Reporte del proyecto</title>
+<style>
+  :root {
+    --primary: #DC2626;
+    --primary-hover: #B91C1C;
+    --primary-soft: #FEE2E2;
+    --sidebar: #1F2125;
+    --sidebar-deep: #17181B;
+    --bg-app: #F3F4F6;
+    --text-strong: #111827;
+    --text: #1F2937;
+    --text-muted: #6B7280;
+    --text-muted-dark: #9CA3AF;
+    --border-soft: #E5E7EB;
+    --card: #FFFFFF;
+    --success: #10B981;
+    --success-soft: #ECFDF5;
+    --info: #6366F1;
+    --info-soft: #EEF2FF;
+    --warn: #F59E0B;
+    --warn-soft: #FEF3C7;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: var(--text);
+    background: var(--bg-app);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+  }
+  nav.sidebar {
+    background: var(--sidebar);
+    color: #fff;
+    padding: 28px 18px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  nav.sidebar .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  nav.sidebar .brand .logo {
+    background: var(--primary);
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #fff;
+    font-size: 18px;
+  }
+  nav.sidebar .brand .title { font-weight: 700; font-size: 16px; }
+  nav.sidebar .brand .subtitle { color: var(--text-muted-dark); font-size: 11px; }
+  nav.sidebar h4 {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted-dark);
+    margin: 18px 12px 8px;
+  }
+  nav.sidebar ol { list-style: none; padding: 0; margin: 0; }
+  nav.sidebar ol li a {
+    display: block;
+    padding: 7px 12px;
+    color: var(--text-muted-dark);
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: background .15s ease;
+  }
+  nav.sidebar ol li a:hover {
+    background: var(--sidebar-deep);
+    color: #fff;
+  }
+  main { padding: 56px 80px 96px; max-width: 1100px; }
+  h1, h2, h3, h4 { color: var(--text-strong); }
+  h1 { font-size: 36px; margin: 0 0 4px; letter-spacing: -.5px; }
+  h2 {
+    font-size: 24px;
+    margin: 56px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-soft);
+    scroll-margin-top: 16px;
+  }
+  h3 { font-size: 18px; margin: 28px 0 10px; }
+  h4 { font-size: 15px; margin: 18px 0 8px; }
+  p { margin: 8px 0 12px; }
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    background: #F3F4F6;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #111827;
+  }
+  pre {
+    background: var(--sidebar);
+    color: #E5E7EB;
+    padding: 16px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 12px 0;
+  }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px;
+    font-size: 14px;
+    background: var(--card);
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th, td { padding: 10px 14px; text-align: left; }
+  th {
+    background: var(--bg-app);
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  tbody tr { border-top: 1px solid var(--border-soft); }
+  tbody tr:hover { background: #F9FAFB; }
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.05);
+    margin: 14px 0;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .stat {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.05);
+  }
+  .stat .label { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .stat .value { font-size: 26px; font-weight: 700; color: var(--text-strong); margin: 6px 0; }
+  .stat .hint { color: var(--text-muted); font-size: 13px; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge.ok { background: var(--success-soft); color: var(--success); }
+  .badge.info { background: var(--info-soft); color: var(--info); }
+  .badge.warn { background: var(--warn-soft); color: var(--warn); }
+  .badge.danger { background: var(--primary-soft); color: var(--primary); }
+  .badge.muted { background: #F3F4F6; color: var(--text-muted); }
+  .callout {
+    background: var(--info-soft);
+    border-left: 4px solid var(--info);
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  .callout.danger { background: var(--primary-soft); border-left-color: var(--primary); }
+  .callout.warn { background: var(--warn-soft); border-left-color: var(--warn); }
+  .diagram {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 22px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.05);
+    overflow-x: auto;
+    margin: 14px 0;
+  }
+  .cover {
+    background: linear-gradient(135deg, #1F2125 0%, #2A2D32 100%);
+    color: #fff;
+    padding: 56px 80px;
+    margin: -56px -80px 0;
+    margin-bottom: 0;
+  }
+  .cover .meta { color: var(--text-muted-dark); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+  .cover h1 { color: #fff; font-size: 44px; margin: 18px 0 8px; }
+  .cover .lede { color: var(--text-muted-dark); font-size: 17px; max-width: 720px; }
+  .cover .tags { margin-top: 22px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .cover .tags .badge { background: rgba(255,255,255,.08); color: #fff; font-weight: 500; }
+  .phase {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 18px;
+    margin: 14px 0;
+    background: var(--card);
+    padding: 18px 22px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    border-left: 4px solid var(--primary);
+  }
+  .phase .num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+  }
+  .phase h4 { margin-top: 0; margin-bottom: 6px; font-size: 16px; }
+  .phase p { margin: 4px 0; font-size: 14px; color: var(--text); }
+  .phase .meta { color: var(--text-muted); font-size: 12px; margin-top: 6px; }
+  ul.checks { list-style: none; padding-left: 0; }
+  ul.checks li { padding-left: 26px; position: relative; margin: 4px 0; font-size: 14px; }
+  ul.checks li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: 700;
+  }
+  .footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--border-soft); color: var(--text-muted); font-size: 13px; text-align: center; }
+  /* Tablas dentro de cards */
+  .card table { box-shadow: none; margin: 4px 0 0; }
+  /* Print */
+  @media print {
+    .layout { display: block; }
+    nav.sidebar { display: none; }
+    main { padding: 0; max-width: 100%; }
+    .cover { margin: 0 0 24px; }
+    h2 { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="brand">
+      <div class="logo">B</div>
+      <div>
+        <div class="title">Baqueano</div>
+        <div class="subtitle">Reporte de proyecto</div>
+      </div>
+    </div>
+
+    <h4>Indice</h4>
+    <ol>
+      <li><a href="#resumen">1. Resumen ejecutivo</a></li>
+      <li><a href="#stack">2. Stack tecnológico</a></li>
+      <li><a href="#arquitectura">3. Arquitectura del sistema</a></li>
+      <li><a href="#capas">4. Capas del backend</a></li>
+      <li><a href="#modelo">5. Modelo de datos</a></li>
+      <li><a href="#auth">6. Flujo de autenticación</a></li>
+      <li><a href="#deploy">7. Entorno y despliegue</a></li>
+      <li><a href="#casos">8. Casos de uso</a></li>
+      <li><a href="#fases">9. Fases del proyecto</a></li>
+      <li><a href="#manual">10. Manual: ABM Usuarios</a></li>
+      <li><a href="#endpoints">11. Apéndice: endpoints</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+  <!-- ============================== COVER ============================== -->
+  <section class="cover">
+    <div class="meta">Portal de gestión · v1.0.0</div>
+    <h1>Baqueano — Reporte del proyecto</h1>
+    <p class="lede">
+      Sistema de gestión con arquitectura cliente-servidor desacoplada.
+      Backend Spring Boot 3.5 sobre Java 25 LTS, frontend React 18 + Vite,
+      persistencia en MySQL 8 con Flyway, empaquetado como WAR para
+      WildFly 39 (Jakarta EE 10).
+    </p>
+    <div class="tags">
+      <span class="badge">Java 25 LTS</span>
+      <span class="badge">Spring Boot 3.5.14</span>
+      <span class="badge">React 18.3</span>
+      <span class="badge">Vite 5.4</span>
+      <span class="badge">MySQL 8</span>
+      <span class="badge">WildFly 39</span>
+      <span class="badge">92 tests verdes</span>
+    </div>
+  </section>
+
+  <!-- ============================== 1. RESUMEN ============================== -->
+  <h2 id="resumen">1. Resumen ejecutivo</h2>
+  <p>
+    Baqueano es un portal de gestión interno con cuatro entidades principales
+    administradas por ABMs completos (Usuarios, Perfiles, Parámetros y Contactos),
+    autenticación JWT, autorización fina por perfil y un menú lateral dinámico
+    construido en runtime desde la base de datos.
+  </p>
+
+  <div class="grid-3">
+    <div class="stat">
+      <div class="label">Backend</div>
+      <div class="value">81 tests</div>
+      <div class="hint">Repos + servicios + controllers + integración</div>
+    </div>
+    <div class="stat">
+      <div class="label">Frontend</div>
+      <div class="value">11 tests</div>
+      <div class="hint">Vitest + React Testing Library en los forms</div>
+    </div>
+    <div class="stat">
+      <div class="label">WAR</div>
+      <div class="value">56 MB</div>
+      <div class="hint">SPA embebida, build en 38s</div>
+    </div>
+  </div>
+
+  <h3>Capacidades principales</h3>
+  <ul class="checks">
+    <li>Login y logout con JWT HS256 + refresh tokens persistidos con hash SHA-256.</li>
+    <li>Bloqueo automático de usuario tras N intentos fallidos (parametrizable en BD).</li>
+    <li>Menú lateral 100% dinámico: cambia al modificar <code>submenu_perfil</code> sin redeploy.</li>
+    <li>Permisos finos por acción (VER / CREAR / EDITAR / ELIMINAR) chequeados en backend (<code>@PreAuthorize</code>) y reflejados en UI.</li>
+    <li>Alta pública de contactos (sin autenticación) desde formulario externo.</li>
+    <li>Observabilidad: actuator <code>/health</code> + <code>/info</code>, logs JSON estructurados en prod, OpenAPI/Swagger en dev.</li>
+    <li>SPA y API mismo origen en producción (un único WAR para WildFly).</li>
+  </ul>
+
+  <!-- ============================== 2. STACK ============================== -->
+  <h2 id="stack">2. Stack tecnológico</h2>
+
+  <h3>Backend</h3>
+  <table>
+    <thead>
+      <tr><th>Componente</th><th>Versión</th><th>Rol</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Java (OpenJDK Temurin)</td><td>25.0.3 LTS</td><td>Lenguaje runtime</td></tr>
+      <tr><td>Spring Boot</td><td>3.5.14</td><td>Framework de aplicación</td></tr>
+      <tr><td>Spring Framework</td><td>6.2.x</td><td>Core IoC + MVC</td></tr>
+      <tr><td>Spring Security</td><td>6.5.x</td><td>Auth + autorización</td></tr>
+      <tr><td>Hibernate ORM</td><td>6.6.x</td><td>JPA implementation</td></tr>
+      <tr><td>HikariCP</td><td>(incluido)</td><td>Connection pool</td></tr>
+      <tr><td>Flyway core + mysql</td><td>12.6.1</td><td>Migraciones de schema</td></tr>
+      <tr><td>mysql-connector-j</td><td>9.3.0</td><td>Driver JDBC</td></tr>
+      <tr><td>MapStruct</td><td>1.6.3</td><td>Mapeo Entity ↔ DTO</td></tr>
+      <tr><td>jjwt</td><td>0.13.0</td><td>Emisión/validación JWT HS256</td></tr>
+      <tr><td>Lombok</td><td>1.18.46</td><td>Boilerplate de entities/services</td></tr>
+      <tr><td>springdoc-openapi</td><td>2.8.17</td><td>OpenAPI 3 + Swagger UI</td></tr>
+      <tr><td>logstash-logback-encoder</td><td>9.0</td><td>Logs JSON estructurados (prod)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Frontend</h3>
+  <table>
+    <thead>
+      <tr><th>Componente</th><th>Versión</th><th>Rol</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Node.js</td><td>24.14.1</td><td>Build-time runtime</td></tr>
+      <tr><td>React + react-dom</td><td>18.3.1</td><td>UI library</td></tr>
+      <tr><td>Vite</td><td>5.4.21</td><td>Build tool + dev server</td></tr>
+      <tr><td>React Router</td><td>6.30.3</td><td>Routing SPA</td></tr>
+      <tr><td>axios</td><td>1.16.1</td><td>Cliente HTTP</td></tr>
+      <tr><td>Tailwind CSS</td><td>3.4.19</td><td>Estilos utilitarios</td></tr>
+      <tr><td>react-hook-form + zod</td><td>7.76 + 4.4</td><td>Forms + validación</td></tr>
+      <tr><td>sonner</td><td>1.7.4</td><td>Toaster de feedback</td></tr>
+      <tr><td>lucide-react</td><td>0.577.0</td><td>Iconos</td></tr>
+      <tr><td>Vitest + Testing Library</td><td>4.1 + 16.3</td><td>Tests unitarios</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Infraestructura</h3>
+  <table>
+    <thead><tr><th>Componente</th><th>Versión</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td>MySQL Server</td><td>8.0.46</td><td>InnoDB / utf8mb4</td></tr>
+      <tr><td>WildFly</td><td>39.0.1.Final</td><td>Jakarta EE 10, datasource JNDI <code>java:jboss/datasources/BaqueanoDS</code></td></tr>
+      <tr><td>Apache Maven</td><td>3.9.15</td><td>Multi-módulo con perfil <code>prod</code></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 3. ARQUITECTURA ============================== -->
+  <h2 id="arquitectura">3. Arquitectura del sistema</h2>
+  <p>
+    El sistema se despliega como un único WAR en WildFly 39 que sirve la SPA
+    (React) y la API REST (Spring Boot) desde el mismo origen. En desarrollo se
+    corre el backend embebido (Tomcat de Spring Boot) en el puerto 8081 y el
+    frontend en Vite en el puerto 5173 con un proxy a 8081.
+  </p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+        </marker>
+      </defs>
+      <!-- Browser -->
+      <rect x="40" y="170" width="160" height="120" rx="10" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+      <text x="120" y="210" text-anchor="middle" font-weight="700" font-size="15" fill="#DC2626">Navegador</text>
+      <text x="120" y="232" text-anchor="middle" font-size="12" fill="#6B7280">SPA React 18</text>
+      <text x="120" y="250" text-anchor="middle" font-size="12" fill="#6B7280">+ axios JWT</text>
+      <text x="120" y="270" text-anchor="middle" font-size="11" fill="#9CA3AF">localStorage tokens</text>
+
+      <!-- WildFly -->
+      <rect x="290" y="80" width="320" height="300" rx="10" fill="#EEF2FF" stroke="#6366F1" stroke-width="1.5"/>
+      <text x="450" y="108" text-anchor="middle" font-weight="700" font-size="14" fill="#6366F1">WildFly 39 (Jakarta EE 10)</text>
+      <text x="450" y="125" text-anchor="middle" font-size="11" fill="#6B7280">Contexto /baqueano</text>
+
+      <!-- WAR contents -->
+      <rect x="320" y="150" width="260" height="60" rx="6" fill="#FFFFFF" stroke="#D1D5DB"/>
+      <text x="450" y="175" text-anchor="middle" font-weight="600" font-size="13" fill="#111827">Static / SPA</text>
+      <text x="450" y="194" text-anchor="middle" font-size="11" fill="#6B7280">index.html + assets bundle</text>
+
+      <rect x="320" y="225" width="260" height="60" rx="6" fill="#FFFFFF" stroke="#D1D5DB"/>
+      <text x="450" y="250" text-anchor="middle" font-weight="600" font-size="13" fill="#111827">Spring Boot 3.5.14</text>
+      <text x="450" y="269" text-anchor="middle" font-size="11" fill="#6B7280">API REST /api/v1/**</text>
+
+      <rect x="320" y="300" width="260" height="60" rx="6" fill="#FFFFFF" stroke="#D1D5DB"/>
+      <text x="450" y="325" text-anchor="middle" font-weight="600" font-size="13" fill="#111827">JNDI DataSource</text>
+      <text x="450" y="344" text-anchor="middle" font-size="11" fill="#6B7280">java:jboss/datasources/BaqueanoDS</text>
+
+      <!-- MySQL -->
+      <rect x="700" y="200" width="160" height="120" rx="10" fill="#ECFDF5" stroke="#10B981" stroke-width="1.5"/>
+      <text x="780" y="240" text-anchor="middle" font-weight="700" font-size="15" fill="#10B981">MySQL 8</text>
+      <text x="780" y="262" text-anchor="middle" font-size="12" fill="#6B7280">BD baqueano</text>
+      <text x="780" y="280" text-anchor="middle" font-size="11" fill="#9CA3AF">8 tablas + auditoría</text>
+      <text x="780" y="298" text-anchor="middle" font-size="11" fill="#9CA3AF">Flyway maneja schema</text>
+
+      <!-- Arrows -->
+      <line x1="200" y1="220" x2="288" y2="220" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="244" y="210" text-anchor="middle" font-size="10" fill="#6B7280">HTTPS</text>
+
+      <line x1="200" y1="250" x2="288" y2="250" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="244" y="270" text-anchor="middle" font-size="10" fill="#6B7280">/baqueano</text>
+
+      <line x1="612" y1="330" x2="698" y2="270" stroke="#6B7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="660" y="290" text-anchor="middle" font-size="10" fill="#6B7280">JDBC</text>
+
+      <!-- Title labels at top -->
+      <text x="120" y="155" text-anchor="middle" font-size="11" fill="#9CA3AF">Cliente</text>
+      <text x="450" y="68" text-anchor="middle" font-size="11" fill="#9CA3AF">Servidor de aplicación</text>
+      <text x="780" y="185" text-anchor="middle" font-size="11" fill="#9CA3AF">Persistencia</text>
+    </svg>
+  </div>
+
+  <h3>Comparación dev vs prod</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>Desarrollo</h4>
+      <p style="font-size:14px;">
+        Backend con <code>mvn spring-boot:run</code> en puerto <strong>8081</strong>.
+        Vite dev server en <strong>5173</strong> con proxy de <code>/baqueano/*</code> al backend.
+        BD <code>baqueano</code> directa por HikariCP. Swagger UI disponible.
+      </p>
+    </div>
+    <div class="card">
+      <h4>Producción</h4>
+      <p style="font-size:14px;">
+        Un único WAR de <strong>56 MB</strong> en WildFly. SPA y API se sirven desde
+        <code>http://host/baqueano/</code>. Datasource vía JNDI gestionado por WildFly.
+        Logs en JSON. Swagger deshabilitado.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================== 4. CAPAS ============================== -->
+  <h2 id="capas">4. Capas del backend</h2>
+  <p>
+    Arquitectura clásica en capas con responsabilidades bien definidas. Las DTOs
+    aíslan los controllers de las entidades JPA, y los mappers (MapStruct) son
+    la única conexión entre ambos mundos.
+  </p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+      <defs>
+        <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+        </marker>
+      </defs>
+
+      <!-- Layers -->
+      <g>
+        <rect x="60" y="30" width="780" height="55" rx="8" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+        <text x="80" y="62" font-weight="700" font-size="14" fill="#DC2626">@RestController</text>
+        <text x="240" y="62" font-size="12" fill="#6B7280">/api/v1/{usuarios,perfiles,parametros,contactos,menu,dashboard,auth}</text>
+      </g>
+
+      <g>
+        <rect x="60" y="100" width="780" height="55" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/>
+        <text x="80" y="132" font-weight="700" font-size="14" fill="#B45309">@RestControllerAdvice + @PreAuthorize</text>
+        <text x="380" y="132" font-size="12" fill="#6B7280">GlobalExceptionHandler + PermisoEvaluator</text>
+      </g>
+
+      <g>
+        <rect x="60" y="170" width="780" height="55" rx="8" fill="#EEF2FF" stroke="#6366F1" stroke-width="1.5"/>
+        <text x="80" y="202" font-weight="700" font-size="14" fill="#6366F1">@Service · @Transactional</text>
+        <text x="320" y="202" font-size="12" fill="#6B7280">UsuarioService, PerfilService, ParametroService, ContactoService, MenuService, DashboardService, AuthService</text>
+      </g>
+
+      <g>
+        <rect x="60" y="240" width="380" height="55" rx="8" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+        <text x="80" y="272" font-weight="700" font-size="14" fill="#374151">MapStruct mappers</text>
+        <text x="240" y="272" font-size="12" fill="#6B7280">Entity ↔ DTO</text>
+      </g>
+      <g>
+        <rect x="460" y="240" width="380" height="55" rx="8" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+        <text x="480" y="272" font-weight="700" font-size="14" fill="#374151">JpaRepository</text>
+        <text x="620" y="272" font-size="12" fill="#6B7280">+ JpaSpecificationExecutor</text>
+      </g>
+
+      <g>
+        <rect x="60" y="310" width="780" height="55" rx="8" fill="#ECFDF5" stroke="#10B981" stroke-width="1.5"/>
+        <text x="80" y="342" font-weight="700" font-size="14" fill="#10B981">@Entity (Auditable)</text>
+        <text x="280" y="342" font-size="12" fill="#6B7280">Perfil, Usuario, Parametro, Contacto, Menu, Submenu, SubmenuPerfil, RefreshToken</text>
+      </g>
+
+      <!-- arrows -->
+      <line x1="450" y1="85" x2="450" y2="98" stroke="#6B7280" marker-end="url(#arrow2)"/>
+      <line x1="450" y1="155" x2="450" y2="168" stroke="#6B7280" marker-end="url(#arrow2)"/>
+      <line x1="450" y1="225" x2="450" y2="238" stroke="#6B7280" marker-end="url(#arrow2)"/>
+      <line x1="450" y1="295" x2="450" y2="308" stroke="#6B7280" marker-end="url(#arrow2)"/>
+    </svg>
+  </div>
+
+  <h3>Decisiones clave</h3>
+  <ul class="checks">
+    <li>Auditoría centralizada en <code>Auditable</code> (<code>@MappedSuperclass</code>) con campos <code>fecha_creacion</code>, <code>fecha_modificacion</code>, <code>usuario_creacion</code>, <code>usuario_modificacion</code>.</li>
+    <li><code>AuditorAware&lt;String&gt;</code> lee del <code>SecurityContextHolder</code>; cae a <code>"system"</code> en runners/jobs.</li>
+    <li>DTOs como Java <code>record</code> inmutables, con <code>@NotBlank</code>/<code>@Email</code>/etc. en los componentes.</li>
+    <li>Servicios <code>readOnly = true</code> por clase, override en métodos de escritura.</li>
+    <li><code>SubmenuPerfil</code> con clave compuesta <code>@EmbeddedId</code> + <code>@MapsId</code>.</li>
+    <li>Cache local (<code>ConcurrentMapCacheManager</code>) para <code>parametros</code>: <code>@Cacheable</code> en lectura, <code>@CacheEvict(allEntries=true)</code> en escritura.</li>
+  </ul>
+
+  <!-- ============================== 5. MODELO DE DATOS ============================== -->
+  <h2 id="modelo">5. Modelo de datos</h2>
+  <p>
+    Ocho tablas en MySQL 8 (InnoDB / utf8mb4_unicode_ci). Toda escritura va por
+    Flyway: el schema está bajo <code>baqueano-backend/src/main/resources/db/migration/</code>
+    con migraciones <code>V1__schema_inicial.sql</code>, <code>V2__seed.sql</code> y
+    <code>V3__refresh_tokens.sql</code>. <code>spring.jpa.hibernate.ddl-auto = validate</code>.
+  </p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+      <style>
+        .tname { font-weight: 700; font-size: 13px; fill: #fff; }
+        .col { font-size: 11px; fill: #374151; font-family: monospace; }
+        .pk { font-weight: 700; fill: #DC2626; }
+        .fk { font-style: italic; fill: #6366F1; }
+        .hdr { fill: #1F2125; }
+      </style>
+
+      <!-- perfiles -->
+      <g>
+        <rect x="20" y="30" width="160" height="20" class="hdr"/>
+        <rect x="20" y="50" width="160" height="100" fill="#FFFFFF" stroke="#9CA3AF"/>
+        <text x="30" y="45" class="tname">perfiles</text>
+        <text x="30" y="68" class="col pk">id (PK)</text>
+        <text x="30" y="82" class="col">nombre UQ</text>
+        <text x="30" y="96" class="col">descripcion</text>
+        <text x="30" y="110" class="col">activo</text>
+        <text x="30" y="124" class="col">audit×4</text>
+      </g>
+
+      <!-- usuarios -->
+      <g>
+        <rect x="240" y="30" width="200" height="20" class="hdr"/>
+        <rect x="240" y="50" width="200" height="180" fill="#FFFFFF" stroke="#9CA3AF"/>
+        <text x="250" y="45" class="tname">usuarios</text>
+        <text x="250" y="68" class="col pk">id (PK)</text>
+        <text x="250" y="82" class="col">username UQ</text>
+        <text x="250" y="96" class="col">email UQ</text>
+        <text x="250" y="110" class="col">password_hash</text>
+        <text x="250" y="124" class="col">nombre · apellido</text>
+        <text x="250" y="138" class="col fk">perfil_id (FK)</text>
+        <text x="250" y="152" class="col">activo</text>
+        <text x="250" y="166" class="col">ultimo_login</text>
+        <text x="250" y="180" class="col">intentos_fallidos</text>
+        <text x="250" y="204" class="col">audit×4</text>
+      </g>
+
+      <!-- refresh_tokens -->
+      <g>
+        <rect x="500" y="30" width="200" height="20" class="hdr"/>
+        <rect x="500" y="50" width="200" height="160" fill="#FFFFFF" stroke="#9CA3AF"/>
+        <text x="510" y="45" class="tname">refresh_tokens</text>
+        <text x="510" y="68" class="col pk">id (PK)</text>
+        <text x="510" y="82" class="col fk">usuario_id (FK)</text>
+        <text x="510" y="96" class="col">token (SHA-256)</text>
+        <text x="510" y="110" class="col">expira_en</text>
+        <text x="510" y="124" class="col">revocado</text>
+        <text x="510" y="138" class="col">fecha_revocacion</text>
+        <text x="510" y="152" class="col">ip_origen</text>
+        <text x="510" y="176" class="col">audit×4</text>
+      </g>
+
+      <!-- parametros -->
+      <g>
+        <rect x="20" y="190" width="160" height="20" class="hdr"/>
+        <rect x="20" y="210" width="160" height="120" fill="#FFFFFF" stroke="#9CA3AF"/>
+        <text x="30" y="205" class="tname">parametros</text>
+        <text x="30" y="228" class="col pk">id (PK)</text>
+        <text x="30" y="242" class="col">clave UQ</text>
+        <text x="30" y="256" class="col">valor</text>
+        <text x="30" y="270" class="col">tipo_dato ENUM</text>
+        <text x="30" y="284" class="col">editable</text>
+        <text x="30" y="304" class="col">audit×4</text>
+      </g>
+
+      <!-- contactos -->
+      <g>
+        <rect x="740" y="30" width="150" height="20" class="hdr"/>
+        <rect x="740" y="50" width="150" height="160" fill="#FFFFFF" stroke="#9CA3AF"/>
+        <text x="750" y="45" class="tname">contactos</text>
+        <text x="750" y="68" class="col pk">id (PK)</text>
+        <text x="750" y="82" class="col">nombre · email</text>
+        <text x="750" y="96" class="col">telefono</text>
+        <text x="750" y="110" class="col">asunto</text>
+        <text x="750" y="124" class="col">mensaje TEXT</text>
+        <text x="750" y="138" class="col">estado ENUM</text>
+        <text x="750" y="152" class="col">ip_origen</text>
+        <text x="750" y="176" class="col">audit×4</text>
+      </g>
+
+      <!-- menu -->
+      <g>
+        <rect x="20" y="370" width="160" height="20" class="hdr"/>
+        <rect x="20" y="390" width="160" height="100" fill="#FFFFFF" stroke="#9CA3AF"/>
+        <text x="30" y="385" class="tname">menu</text>
+        <text x="30" y="408" class="col pk">id (PK)</text>
+        <text x="30" y="422" class="col">nombre UQ</text>
+        <text x="30" y="436" class="col">icono · orden</text>
+        <text x="30" y="450" class="col">activo</text>
+        <text x="30" y="464" class="col">audit×4</text>
+      </g>
+
+      <!-- submenu -->
+      <g>
+        <rect x="240" y="370" width="200" height="20" class="hdr"/>
+        <rect x="240" y="390" width="200" height="120" fill="#FFFFFF" stroke="#9CA3AF"/>
+        <text x="250" y="385" class="tname">submenu</text>
+        <text x="250" y="408" class="col pk">id (PK)</text>
+        <text x="250" y="422" class="col fk">menu_id (FK)</text>
+        <text x="250" y="436" class="col">nombre · ruta UQ</text>
+        <text x="250" y="450" class="col">icono · orden</text>
+        <text x="250" y="464" class="col">activo</text>
+        <text x="250" y="484" class="col">audit×4</text>
+      </g>
+
+      <!-- submenu_perfil -->
+      <g>
+        <rect x="500" y="370" width="200" height="20" class="hdr"/>
+        <rect x="500" y="390" width="200" height="100" fill="#FFFFFF" stroke="#9CA3AF"/>
+        <text x="510" y="385" class="tname">submenu_perfil</text>
+        <text x="510" y="408" class="col pk">submenu_id + perfil_id</text>
+        <text x="510" y="422" class="col">puede_ver</text>
+        <text x="510" y="436" class="col">puede_crear</text>
+        <text x="510" y="450" class="col">puede_editar</text>
+        <text x="510" y="464" class="col">puede_eliminar</text>
+      </g>
+
+      <!-- Relations -->
+      <line x1="180" y1="100" x2="240" y2="135" stroke="#6366F1" stroke-width="1.2"/>
+      <text x="195" y="115" font-size="10" fill="#6B7280">1..*</text>
+
+      <line x1="440" y1="125" x2="500" y2="100" stroke="#6366F1" stroke-width="1.2"/>
+      <text x="465" y="105" font-size="10" fill="#6B7280">1..*</text>
+
+      <line x1="180" y1="420" x2="240" y2="420" stroke="#6366F1" stroke-width="1.2"/>
+      <text x="200" y="412" font-size="10" fill="#6B7280">1..*</text>
+
+      <line x1="440" y1="430" x2="500" y2="425" stroke="#6366F1" stroke-width="1.2"/>
+      <text x="465" y="420" font-size="10" fill="#6B7280">1..*</text>
+
+      <line x1="100" y1="150" x2="100" y2="370" stroke="#6366F1" stroke-width="1.2" stroke-dasharray="3"/>
+      <text x="105" y="260" font-size="10" fill="#6B7280">1..* (perfil_id)</text>
+      <line x1="100" y1="370" x2="500" y2="420" stroke="#6366F1" stroke-width="1.2" stroke-dasharray="3"/>
+    </svg>
+  </div>
+
+  <div class="callout">
+    <strong>Menú dinámico:</strong> el árbol que recibe el frontend en <code>/api/v1/menu/mio</code>
+    se construye con una query JPQL que une <code>submenu</code> + <code>menu</code> + <code>submenu_perfil</code>
+    filtrando por el <code>perfil_id</code> del usuario logueado y <code>puede_ver = true</code>.
+    Cambiar permisos en BD se refleja en el siguiente login (o refresh del menú) sin redeploy.
+  </div>
+
+  <!-- ============================== 6. AUTH FLOW ============================== -->
+  <h2 id="auth">6. Flujo de autenticación</h2>
+
+  <div class="diagram">
+    <svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+      <defs>
+        <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+        </marker>
+      </defs>
+      <!-- Lifelines -->
+      <text x="60" y="30" font-weight="700" font-size="13" fill="#1F2125">Cliente (SPA)</text>
+      <line x1="100" y1="40" x2="100" y2="440" stroke="#9CA3AF" stroke-dasharray="3"/>
+
+      <text x="260" y="30" font-weight="700" font-size="13" fill="#1F2125">AuthController</text>
+      <line x1="300" y1="40" x2="300" y2="440" stroke="#9CA3AF" stroke-dasharray="3"/>
+
+      <text x="460" y="30" font-weight="700" font-size="13" fill="#1F2125">AuthService</text>
+      <line x1="500" y1="40" x2="500" y2="440" stroke="#9CA3AF" stroke-dasharray="3"/>
+
+      <text x="660" y="30" font-weight="700" font-size="13" fill="#1F2125">MySQL / JWT</text>
+      <line x1="700" y1="40" x2="700" y2="440" stroke="#9CA3AF" stroke-dasharray="3"/>
+
+      <!-- Messages -->
+      <g font-size="12">
+        <line x1="100" y1="70" x2="296" y2="70" stroke="#374151" marker-end="url(#arrow3)"/>
+        <text x="200" y="64" text-anchor="middle" fill="#374151">POST /auth/login {user,pwd}</text>
+
+        <line x1="300" y1="100" x2="496" y2="100" stroke="#374151" marker-end="url(#arrow3)"/>
+        <text x="400" y="94" text-anchor="middle" fill="#374151">login(dto, ip)</text>
+
+        <line x1="500" y1="130" x2="696" y2="130" stroke="#374151" marker-end="url(#arrow3)"/>
+        <text x="600" y="124" text-anchor="middle" fill="#374151">findByUsername(admin)</text>
+
+        <line x1="700" y1="160" x2="504" y2="160" stroke="#10B981" marker-end="url(#arrow3)"/>
+        <text x="600" y="154" text-anchor="middle" fill="#10B981">Usuario</text>
+
+        <text x="450" y="186" text-anchor="middle" fill="#6B7280" font-style="italic">passwordEncoder.matches(plain, hash)</text>
+        <text x="450" y="201" text-anchor="middle" fill="#6B7280" font-style="italic">+ chequea intentos_fallidos y activo</text>
+
+        <line x1="500" y1="220" x2="696" y2="220" stroke="#374151" marker-end="url(#arrow3)"/>
+        <text x="600" y="214" text-anchor="middle" fill="#374151">generarAccessToken (HS256)</text>
+
+        <line x1="500" y1="250" x2="696" y2="250" stroke="#374151" marker-end="url(#arrow3)"/>
+        <text x="600" y="244" text-anchor="middle" fill="#374151">insert refresh_tokens (hash)</text>
+
+        <line x1="500" y1="280" x2="304" y2="280" stroke="#10B981" marker-end="url(#arrow3)"/>
+        <text x="400" y="274" text-anchor="middle" fill="#10B981">LoginResponseDTO</text>
+
+        <line x1="300" y1="310" x2="104" y2="310" stroke="#10B981" marker-end="url(#arrow3)"/>
+        <text x="200" y="304" text-anchor="middle" fill="#10B981">200 + JWT + refresh + perfil</text>
+
+        <text x="100" y="340" font-style="italic" fill="#6B7280">SPA guarda en localStorage</text>
+
+        <line x1="100" y1="370" x2="296" y2="370" stroke="#DC2626" marker-end="url(#arrow3)"/>
+        <text x="200" y="364" text-anchor="middle" fill="#DC2626">GET /menu/mio  Bearer ...</text>
+
+        <text x="500" y="400" text-anchor="middle" font-style="italic" fill="#6B7280">JwtAuthenticationFilter valida y llena SecurityContext</text>
+
+        <line x1="300" y1="425" x2="104" y2="425" stroke="#10B981" marker-end="url(#arrow3)"/>
+        <text x="200" y="419" text-anchor="middle" fill="#10B981">200 [{MenuItemDTO}]</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3>Características de seguridad</h3>
+  <ul class="checks">
+    <li><strong>JWT HS256</strong>, claims <code>sub/uid/perfilId/perfil/iat/exp</code>, 30 min de vida.</li>
+    <li><strong>Refresh token</strong> aleatorio de 32 bytes (Base64 url-safe). En BD se guarda solo el SHA-256.</li>
+    <li><strong>BCrypt cost 10</strong> para passwords. <code>AdminPasswordRunner</code> regenera el hash placeholder en el primer arranque.</li>
+    <li><strong>Bloqueo por intentos</strong>: contador en <code>usuarios.intentos_fallidos</code>; máximo desde <code>parametros.login.intentos.max</code>.</li>
+    <li><strong>Stateless</strong> en backend (<code>SessionCreationPolicy.STATELESS</code>), CSRF off, CORS solo para <code>localhost:5173</code> en dev.</li>
+    <li><strong>Errores uniformes</strong>: <code>{ timestamp, status, error, code, message, path, fieldErrors? }</code>. 401 con código (<code>CREDENCIALES_INVALIDAS</code>, <code>USUARIO_INACTIVO</code>, <code>USUARIO_BLOQUEADO</code>).</li>
+    <li><strong>Autorización fina</strong>: <code>@PreAuthorize("@permisoEvaluator.puede(authentication, '/usuarios', 'CREAR')")</code>.</li>
+  </ul>
+
+  <!-- ============================== 7. DEPLOY ============================== -->
+  <h2 id="deploy">7. Entorno y despliegue</h2>
+
+  <div class="diagram">
+    <svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+      <defs>
+        <marker id="arrow4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+        </marker>
+      </defs>
+
+      <!-- Build pipeline -->
+      <rect x="40" y="30" width="820" height="160" rx="10" fill="#FFFFFF" stroke="#E5E7EB"/>
+      <text x="60" y="56" font-weight="700" font-size="14" fill="#1F2125">Build (mvn -Pprod clean package)</text>
+
+      <rect x="70" y="80" width="170" height="80" rx="6" fill="#EEF2FF" stroke="#6366F1"/>
+      <text x="155" y="110" text-anchor="middle" font-weight="700" font-size="13" fill="#6366F1">Frontend</text>
+      <text x="155" y="128" text-anchor="middle" font-size="11" fill="#6B7280">frontend-maven-plugin</text>
+      <text x="155" y="143" text-anchor="middle" font-size="11" fill="#6B7280">npm ci + npm run build</text>
+
+      <rect x="270" y="80" width="170" height="80" rx="6" fill="#FEF3C7" stroke="#F59E0B"/>
+      <text x="355" y="110" text-anchor="middle" font-weight="700" font-size="13" fill="#B45309">Resources copy</text>
+      <text x="355" y="128" text-anchor="middle" font-size="11" fill="#6B7280">dist/** →</text>
+      <text x="355" y="143" text-anchor="middle" font-size="11" fill="#6B7280">target/classes/static/</text>
+
+      <rect x="470" y="80" width="170" height="80" rx="6" fill="#FEE2E2" stroke="#DC2626"/>
+      <text x="555" y="110" text-anchor="middle" font-weight="700" font-size="13" fill="#DC2626">Backend compile</text>
+      <text x="555" y="128" text-anchor="middle" font-size="11" fill="#6B7280">javac + MapStruct</text>
+      <text x="555" y="143" text-anchor="middle" font-size="11" fill="#6B7280">build-info.properties</text>
+
+      <rect x="670" y="80" width="170" height="80" rx="6" fill="#ECFDF5" stroke="#10B981"/>
+      <text x="755" y="110" text-anchor="middle" font-weight="700" font-size="13" fill="#10B981">WAR package</text>
+      <text x="755" y="128" text-anchor="middle" font-size="11" fill="#6B7280">baqueano.war</text>
+      <text x="755" y="143" text-anchor="middle" font-size="11" fill="#6B7280">56 MB</text>
+
+      <line x1="240" y1="120" x2="266" y2="120" stroke="#6B7280" marker-end="url(#arrow4)"/>
+      <line x1="440" y1="120" x2="466" y2="120" stroke="#6B7280" marker-end="url(#arrow4)"/>
+      <line x1="640" y1="120" x2="666" y2="120" stroke="#6B7280" marker-end="url(#arrow4)"/>
+
+      <!-- Deploy -->
+      <rect x="40" y="220" width="820" height="180" rx="10" fill="#FFFFFF" stroke="#E5E7EB"/>
+      <text x="60" y="248" font-weight="700" font-size="14" fill="#1F2125">Deploy en WildFly 39</text>
+
+      <rect x="70" y="270" width="220" height="110" rx="6" fill="#1F2125"/>
+      <text x="180" y="293" text-anchor="middle" font-weight="700" font-size="13" fill="#fff">$WILDFLY_HOME/modules/</text>
+      <text x="180" y="313" text-anchor="middle" font-size="11" fill="#9CA3AF">com/mysql/main/</text>
+      <text x="180" y="328" text-anchor="middle" font-size="11" fill="#9CA3AF">mysql-connector-j-9.3.0.jar</text>
+      <text x="180" y="343" text-anchor="middle" font-size="11" fill="#9CA3AF">module.xml</text>
+      <text x="180" y="368" text-anchor="middle" font-size="10" fill="#DC2626">setup-mysql-module.ps1</text>
+
+      <rect x="320" y="270" width="220" height="110" rx="6" fill="#1F2125"/>
+      <text x="430" y="293" text-anchor="middle" font-weight="700" font-size="13" fill="#fff">jboss-cli</text>
+      <text x="430" y="313" text-anchor="middle" font-size="11" fill="#9CA3AF">jdbc-driver=mysql:add</text>
+      <text x="430" y="328" text-anchor="middle" font-size="11" fill="#9CA3AF">data-source add BaqueanoDS</text>
+      <text x="430" y="343" text-anchor="middle" font-size="11" fill="#9CA3AF">java:jboss/datasources/...</text>
+      <text x="430" y="368" text-anchor="middle" font-size="10" fill="#DC2626">wildfly-datasource.cli</text>
+
+      <rect x="570" y="270" width="270" height="110" rx="6" fill="#1F2125"/>
+      <text x="705" y="293" text-anchor="middle" font-weight="700" font-size="13" fill="#fff">standalone/deployments/</text>
+      <text x="705" y="313" text-anchor="middle" font-size="11" fill="#9CA3AF">baqueano.war → activo</text>
+      <text x="705" y="328" text-anchor="middle" font-size="11" fill="#9CA3AF">SPRING_PROFILES_ACTIVE=prod</text>
+      <text x="705" y="343" text-anchor="middle" font-size="11" fill="#9CA3AF">JWT_SECRET=...</text>
+      <text x="705" y="368" text-anchor="middle" font-size="10" fill="#DC2626">copy WAR + restart</text>
+    </svg>
+  </div>
+
+  <h3>Comandos de despliegue</h3>
+  <pre><code># 1) Instalar el driver MySQL como módulo de WildFly (una vez)
+.\scripts\wildfly\setup-mysql-module.ps1
+
+# 2) Levantar WildFly
+&amp; "$env:WILDFLY_HOME\bin\standalone.bat"
+
+# 3) Crear datasource BaqueanoDS
+&amp; "$env:WILDFLY_HOME\bin\jboss-cli.bat" --connect `
+  --file=scripts\wildfly\wildfly-datasource.cli
+
+# 4) Setear perfil prod (editar standalone.conf.bat)
+set "JAVA_OPTS=%JAVA_OPTS% -Dspring.profiles.active=prod"
+set "JAVA_OPTS=%JAVA_OPTS% -DJWT_SECRET=ALGUN_SECRETO_REAL"
+
+# 5) Hot deploy
+Copy-Item baqueano-backend\target\baqueano.war `
+  "$env:WILDFLY_HOME\standalone\deployments\"</code></pre>
+
+  <!-- ============================== 8. CASOS DE USO ============================== -->
+  <h2 id="casos">8. Casos de uso</h2>
+  <p>
+    El sistema soporta tres perfiles seed (ADMIN, GESTOR, CONSULTA) con permisos
+    diferentes por submenú. La tabla resume qué puede hacer cada uno:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Caso de uso</th>
+        <th>ADMIN</th>
+        <th>GESTOR</th>
+        <th>CONSULTA</th>
+        <th>Público</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Login con username/password</td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge ok">Endpoint</span></td>
+      </tr>
+      <tr>
+        <td>Ver dashboard con totales</td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge ok">Sí</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Listar usuarios</td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge muted">No (oculto)</span></td>
+        <td><span class="badge muted">No (oculto)</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Crear / editar / eliminar usuario</td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge danger">403</span></td>
+        <td><span class="badge danger">403</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Gestionar perfiles</td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge muted">No (oculto)</span></td>
+        <td><span class="badge muted">No (oculto)</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Gestionar parámetros</td>
+        <td><span class="badge ok">CRUD</span></td>
+        <td><span class="badge info">CRUD sin borrar</span></td>
+        <td><span class="badge muted">No (oculto)</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Ver contactos</td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge info">Solo lectura</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Cambiar estado de contacto</td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge ok">Sí</span></td>
+        <td><span class="badge danger">403</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Enviar formulario de contacto</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td><span class="badge ok">POST público</span></td>
+      </tr>
+      <tr>
+        <td><code>/actuator/health</code></td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td><span class="badge ok">Público</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Recorrido típico del ADMIN</h3>
+  <ol>
+    <li>Login en <code>/login</code> con admin/admin123.</li>
+    <li>Dashboard muestra totales (usuarios, contactos nuevos, perfiles) y últimos 5 contactos.</li>
+    <li>Click en "Gestión de Usuarios" → ABM con paginación y botones Nuevo/Editar/Eliminar.</li>
+    <li>Alta de un nuevo usuario con perfil GESTOR → validaciones del lado cliente + servidor.</li>
+    <li>Verifica que el usuario aparece en la tabla → modifica algún campo → confirma.</li>
+    <li>Baja lógica de un usuario (no se elimina la fila, queda <code>activo=false</code>).</li>
+    <li>Logout → vuelve a <code>/login</code>; refresh token queda revocado en BD.</li>
+  </ol>
+
+  <h3>Recorrido del usuario CONSULTA</h3>
+  <ol>
+    <li>Login → ve sidebar SIN Usuarios ni Parámetros.</li>
+    <li>Puede ver Dashboard, Perfiles, Contactos en modo lectura.</li>
+    <li>Si intenta acceder a <code>/usuarios</code> manualmente, la API responde 403; en UI los botones de acción están ocultos.</li>
+  </ol>
+
+  <!-- ============================== 9. FASES ============================== -->
+  <h2 id="fases">9. Fases del proyecto</h2>
+  <p>Diez fases incrementales con verificación real (build + tests) y commit por fase.</p>
+
+  <div class="phase">
+    <div class="num">0</div>
+    <div>
+      <h4>Preflight + repo init</h4>
+      <p>Verificación de entorno (Java 25, Maven, Node, MySQL, WildFly), consulta de versiones reales en Maven Central / npm, <code>git init</code> y <code>.gitignore</code>.</p>
+      <p class="meta">Entregable: tabla de versiones fijadas, repo inicializado.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">1</div>
+    <div>
+      <h4>Esqueleto Maven multi-módulo</h4>
+      <p>POM padre + módulos <code>baqueano-backend</code> (war) y <code>baqueano-frontend</code> (placeholder). <code>BaqueanoApplication</code> + <code>ServletInitializer</code>. <code>application.yml</code> base.</p>
+      <p class="meta">Verificado: <code>mvn clean compile</code> → BUILD SUCCESS con Java 25 + Spring Boot 3.5.14.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">2</div>
+    <div>
+      <h4>Base de datos + Flyway</h4>
+      <p>Script administrativo <code>db_setup.sql</code>, 7 tablas en V1, datos seed en V2, tabla <code>refresh_tokens</code> en V3. Perfiles <code>dev</code> y <code>prod</code> (JNDI).</p>
+      <p class="meta">Verificado: 3 migraciones aplicadas exitosamente, datos seed presentes.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">3</div>
+    <div>
+      <h4>Entidades JPA + repositorios + auditing</h4>
+      <p>9 entidades con Lombok 1.18.46 + <code>jakarta.persistence</code> + <code>jakarta.validation</code>. <code>Auditable</code> con <code>@CreatedDate/@CreatedBy/@LastModifiedDate/@LastModifiedBy</code>. 8 repositorios JPA con queries derivadas y JPQL.</p>
+      <p class="meta">Verificado: <strong>21 tests <code>@DataJpaTest</code></strong> contra MySQL <code>baqueano_test</code> — happy paths de cada repo + menu dinámico.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">4</div>
+    <div>
+      <h4>Servicios + DTOs + MapStruct</h4>
+      <p>MapStruct 1.6.3 + lombok-mapstruct-binding. 17 DTOs como Java records. 4 mappers + 6 servicios (Usuario, Perfil, Parámetro, Contacto, Menu, Dashboard) con <code>@Transactional</code> y <code>@Cacheable</code>.</p>
+      <p class="meta">Verificado: <strong>39 tests</strong> (18 nuevos de servicios) con mappers reales vía <code>Mappers.getMapper()</code>.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">5</div>
+    <div>
+      <h4>Seguridad + JWT + autenticación</h4>
+      <p>spring-boot-starter-security + jjwt 0.13.0. <code>SecurityConfig</code> stateless, <code>JwtTokenProvider</code>, <code>JwtAuthenticationFilter</code>, <code>UserDetailsServiceImpl</code>, <code>PermisoEvaluator</code>, <code>AuthController</code> (login/refresh/logout), <code>AdminPasswordRunner</code>.</p>
+      <p class="meta">Verificado: <strong>56 tests</strong> + login E2E con curl → JWT real emitido y validado.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">6</div>
+    <div>
+      <h4>Controllers REST + manejo de errores</h4>
+      <p>6 <code>@RestController</code> bajo <code>/api/v1</code> con <code>@PreAuthorize</code>. <code>GlobalExceptionHandler</code> con códigos uniformes (NOT_FOUND, OPERACION_INVALIDA, VALIDATION_ERROR, etc.). <code>JsonAuthHandlers</code> para 401/403 desde la cadena de filtros.</p>
+      <p class="meta">Verificado: <strong>78 tests</strong> (22 de controllers con <code>@WebMvcTest</code>) + manual E2E con todos los flujos.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">7</div>
+    <div>
+      <h4>Frontend: bootstrap, layout, login, dashboard</h4>
+      <p>Vite 5 + React 18 + Tailwind 3.4 (paleta del spec) + axios con interceptors + AuthContext + ProtectedRoute. Sidebar dinámico desde <code>/menu/mio</code>. Login con react-hook-form + zod. Dashboard con stat cards y tabla de últimos contactos.</p>
+      <p class="meta">Verificado: <code>npm run build</code> → 354 KB JS / 113 KB gzip. Flow E2E manual: admin/admin123 → /dashboard con datos reales.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">8</div>
+    <div>
+      <h4>ABMs completos + permisos dinámicos + Vitest</h4>
+      <p>UI reusables (Button, Modal, ConfirmDialog, Table, Pagination, FormField con forwardRef). Hooks <code>usePagedQuery</code> y <code>usePerfilesAll</code>. 4 ABMs completos con formularios react-hook-form + zod. Botones N/E/E ocultos por <code>getPermisos(ruta)</code>.</p>
+      <p class="meta">Verificado: <strong>11 tests Vitest</strong> sobre los formularios (validación, modo create vs edit, defaultValues).</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">9</div>
+    <div>
+      <h4>Empaquetado WAR + WildFly</h4>
+      <p>Perfil Maven <code>prod</code> con frontend-maven-plugin 2.0.0 (npm ci + build + copy a static). <code>jboss-deployment-structure.xml</code>. <code>SpaConfig</code> para deep-linking de la SPA. Scripts <code>setup-mysql-module.ps1</code> + <code>wildfly-datasource.cli</code>. README operativo.</p>
+      <p class="meta">Verificado: WAR de <strong>49 MB</strong> con SPA embebida; <code>index.html</code> referencia <code>/baqueano/assets/...</code> correctamente.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="num">10</div>
+    <div>
+      <h4>Observabilidad + Swagger + logs JSON + tests integración</h4>
+      <p>Actuator (/health, /info con build-info), springdoc 2.8.17, logstash-logback-encoder 9.0 con <code>logback-spring.xml</code> condicional por perfil. <code>AuthIntegrationTest</code> con <code>@SpringBootTest(RANDOM_PORT)</code>.</p>
+      <p class="meta">Verificado: <strong>81 tests</strong> backend + 11 frontend = <strong>92 totales</strong>. WAR final 56 MB.</p>
+    </div>
+  </div>
+
+  <h3>Hallazgos y correcciones del camino</h3>
+  <table>
+    <thead><tr><th>Fase</th><th>Hallazgo</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>2</td>
+        <td>Puerto 8080 ocupado por WildFly del usuario</td>
+        <td>Dev backend en :8081, configurable vía <code>BAQUEANO_DEV_PORT</code></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><code>intentos_fallidos TINYINT</code> mapea a <code>Byte</code>, no a <code>Integer</code></td>
+        <td>V1 actualizado a <code>INT</code>; drop+recreate de BDs</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>MapStruct: colisión <code>nombre</code>/<code>activo</code> entre Usuario y Perfil</td>
+        <td><code>@Mapping(source = "dto.nombre")</code> explícito</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><code>@PathVariable</code> falla sin <code>-parameters</code> en javac</td>
+        <td><code>&lt;parameters&gt;true&lt;/parameters&gt;</code> en maven-compiler-plugin</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Inputs sin <code>forwardRef</code>: RHF perdía el ref → defaultValues nunca llegaban al DOM</td>
+        <td>Wrappers Input/Select/etc. con <code>React.forwardRef</code></td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td>springdoc 3.0.x es para Spring Boot 4.x (bean conflict)</td>
+        <td>Downgrade a springdoc 2.8.17</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 10. MANUAL ABM USUARIOS ============================== -->
+  <h2 id="manual">10. Manual de usuario — ABM Usuarios</h2>
+  <p>
+    Esta sección muestra, paso a paso, cómo administrar usuarios desde la UI.
+    Disponible para perfiles con permiso <code>VER /usuarios</code> (en el seed, solo
+    el perfil <strong>ADMIN</strong>).
+  </p>
+
+  <h3>Pantalla principal</h3>
+  <div class="diagram">
+    <!-- Mock screenshot of usuarios page -->
+    <svg viewBox="0 0 880 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+      <!-- Sidebar -->
+      <rect x="0" y="0" width="180" height="460" fill="#1F2125"/>
+      <rect x="14" y="20" width="28" height="28" rx="6" fill="#DC2626"/>
+      <text x="28" y="40" text-anchor="middle" font-weight="700" font-size="14" fill="#fff">B</text>
+      <text x="50" y="30" font-weight="700" font-size="11" fill="#fff">Baqueano</text>
+      <text x="50" y="42" font-size="9" fill="#9CA3AF">Sistema de Gestión</text>
+
+      <text x="20" y="80" font-size="9" fill="#9CA3AF" letter-spacing="2">MENÚ PRINCIPAL</text>
+      <text x="20" y="105" font-size="11" fill="#9CA3AF">⌂ Dashboard</text>
+      <text x="20" y="125" font-size="11" fill="#9CA3AF">⚙ Parámetros</text>
+      <rect x="10" y="135" width="160" height="22" rx="4" fill="#DC2626"/>
+      <text x="20" y="150" font-size="11" fill="#fff">⌗ Usuarios</text>
+      <text x="20" y="175" font-size="11" fill="#9CA3AF">▼ Perfiles</text>
+      <text x="20" y="195" font-size="11" fill="#9CA3AF">✉ Contactos</text>
+
+      <!-- Header -->
+      <rect x="180" y="0" width="700" height="40" fill="#fff" stroke="#E5E7EB"/>
+      <text x="200" y="25" font-size="11" fill="#6B7280">Baqueano › Usuarios</text>
+
+      <!-- Title + new button -->
+      <text x="200" y="75" font-weight="700" font-size="16" fill="#111827">Usuarios</text>
+      <rect x="780" y="58" width="80" height="26" rx="6" fill="#DC2626"/>
+      <text x="820" y="76" text-anchor="middle" font-size="11" fill="#fff">+ Nuevo</text>
+
+      <!-- Table -->
+      <rect x="200" y="100" width="660" height="280" rx="8" fill="#fff" stroke="#E5E7EB"/>
+      <rect x="200" y="100" width="660" height="32" fill="#F3F4F6"/>
+      <text x="216" y="120" font-size="9" letter-spacing="1" fill="#6B7280">USUARIO</text>
+      <text x="316" y="120" font-size="9" letter-spacing="1" fill="#6B7280">EMAIL</text>
+      <text x="476" y="120" font-size="9" letter-spacing="1" fill="#6B7280">NOMBRE</text>
+      <text x="616" y="120" font-size="9" letter-spacing="1" fill="#6B7280">PERFIL</text>
+      <text x="696" y="120" font-size="9" letter-spacing="1" fill="#6B7280">ESTADO</text>
+
+      <!-- Rows -->
+      <line x1="200" y1="132" x2="860" y2="132" stroke="#E5E7EB"/>
+      <text x="216" y="155" font-size="11" fill="#111827">admin</text>
+      <text x="316" y="155" font-size="11" fill="#111827">admin@baqueano.local</text>
+      <text x="476" y="155" font-size="11" fill="#111827">Admin Sistema</text>
+      <text x="616" y="155" font-size="11" fill="#111827">ADMIN</text>
+      <rect x="696" y="143" width="46" height="16" rx="4" fill="#ECFDF5"/>
+      <text x="719" y="155" text-anchor="middle" font-size="9" fill="#10B981">Activo</text>
+      <text x="800" y="155" font-size="13" fill="#6B7280">✎</text>
+      <text x="826" y="155" font-size="13" fill="#DC2626">🗑</text>
+
+      <line x1="200" y1="170" x2="860" y2="170" stroke="#E5E7EB"/>
+      <text x="216" y="193" font-size="11" fill="#111827">jdoe</text>
+      <text x="316" y="193" font-size="11" fill="#111827">john@baqueano.local</text>
+      <text x="476" y="193" font-size="11" fill="#111827">John Doe</text>
+      <text x="616" y="193" font-size="11" fill="#111827">GESTOR</text>
+      <rect x="696" y="181" width="46" height="16" rx="4" fill="#ECFDF5"/>
+      <text x="719" y="193" text-anchor="middle" font-size="9" fill="#10B981">Activo</text>
+      <text x="800" y="193" font-size="13" fill="#6B7280">✎</text>
+      <text x="826" y="193" font-size="13" fill="#DC2626">🗑</text>
+
+      <line x1="200" y1="208" x2="860" y2="208" stroke="#E5E7EB"/>
+      <text x="216" y="231" font-size="11" fill="#111827">mlopez</text>
+      <text x="316" y="231" font-size="11" fill="#111827">maria@baqueano.local</text>
+      <text x="476" y="231" font-size="11" fill="#111827">Maria Lopez</text>
+      <text x="616" y="231" font-size="11" fill="#111827">CONSULTA</text>
+      <rect x="696" y="219" width="56" height="16" rx="4" fill="#F3F4F6"/>
+      <text x="724" y="231" text-anchor="middle" font-size="9" fill="#6B7280">Inactivo</text>
+      <text x="800" y="231" font-size="13" fill="#6B7280">✎</text>
+      <text x="826" y="231" font-size="13" fill="#DC2626">🗑</text>
+
+      <!-- Pagination -->
+      <text x="216" y="360" font-size="11" fill="#6B7280">Página 1 de 1 · 3 usuarios</text>
+      <rect x="720" y="345" width="64" height="22" rx="4" fill="#fff" stroke="#E5E7EB"/>
+      <text x="752" y="361" text-anchor="middle" font-size="10" fill="#9CA3AF">Anterior</text>
+      <rect x="790" y="345" width="64" height="22" rx="4" fill="#fff" stroke="#E5E7EB"/>
+      <text x="822" y="361" text-anchor="middle" font-size="10" fill="#9CA3AF">Siguiente</text>
+    </svg>
+  </div>
+
+  <h3>Crear un usuario</h3>
+  <ol>
+    <li>Hacer click en el botón <strong>"+ Nuevo"</strong> (esquina superior derecha). El botón solo está visible si tu perfil tiene permiso <code>CREAR</code> en la ruta <code>/usuarios</code>.</li>
+    <li>Se abre un modal con los siguientes campos:
+      <table>
+        <thead><tr><th>Campo</th><th>Tipo</th><th>Reglas</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Username</strong></td><td>texto</td><td>obligatorio, máx 50, único en el sistema</td></tr>
+          <tr><td><strong>Email</strong></td><td>email</td><td>obligatorio, formato válido, máx 150, único</td></tr>
+          <tr><td><strong>Contraseña</strong></td><td>password</td><td>obligatorio, mínimo 8 caracteres, máx 100. Se hashea con BCrypt antes de guardar.</td></tr>
+          <tr><td><strong>Nombre</strong></td><td>texto</td><td>obligatorio, máx 100</td></tr>
+          <tr><td><strong>Apellido</strong></td><td>texto</td><td>obligatorio, máx 100</td></tr>
+          <tr><td><strong>Perfil</strong></td><td>select</td><td>obligatorio. Select cargado desde <code>/api/v1/perfiles</code>.</td></tr>
+          <tr><td><strong>Activo</strong></td><td>checkbox</td><td>default: marcado</td></tr>
+        </tbody>
+      </table>
+    </li>
+    <li>Si hay errores de validación, aparecen en rojo bajo cada campo y el submit se bloquea (no se llega a llamar al backend).</li>
+    <li>Al hacer click en <strong>"Guardar"</strong>, la SPA envía <code>POST /api/v1/usuarios</code> con el DTO. Posibles respuestas:
+      <ul style="font-size:14px;">
+        <li><span class="badge ok">201</span> Usuario creado. Toast verde "Usuario creado". El modal se cierra y la tabla recarga.</li>
+        <li><span class="badge warn">409 OPERACION_INVALIDA</span> Username o email duplicado. Toast rojo con el mensaje específico.</li>
+        <li><span class="badge warn">400 VALIDATION_ERROR</span> Algún campo no cumple las reglas del backend.</li>
+        <li><span class="badge danger">403 FORBIDDEN</span> Tu perfil no tiene permiso <code>CREAR /usuarios</code>.</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>Editar un usuario</h3>
+  <ol>
+    <li>Click en el ícono ✎ de la fila a editar. Solo visible con permiso <code>EDITAR</code>.</li>
+    <li>La SPA hace <code>GET /api/v1/usuarios/{id}</code> para traer el objeto completo (incluye <code>perfilId</code>, que no está en el list-item).</li>
+    <li>Se abre el modal con los datos precargados. <strong>Importante</strong>: en modo edición, los campos <strong>Username</strong> y <strong>Contraseña</strong> NO se muestran (el username es inmutable; la contraseña tendrá su propio endpoint de cambio).</li>
+    <li>Modificar los campos deseados y hacer click en <strong>"Guardar"</strong> → <code>PUT /api/v1/usuarios/{id}</code>.</li>
+    <li>Toast verde "Usuario actualizado". Si el email cambia y choca con otro existente, se muestra el toast 409.</li>
+  </ol>
+
+  <h3>Dar de baja un usuario</h3>
+  <div class="callout warn">
+    El borrado es <strong>baja lógica</strong>: la fila no se elimina, solo se setea <code>activo = false</code>.
+    Esto preserva la integridad referencial con tablas de auditoría y permite reactivación posterior.
+  </div>
+  <ol>
+    <li>Click en el ícono 🗑 (papelera roja) de la fila. Solo visible con permiso <code>ELIMINAR</code>.</li>
+    <li>Aparece un diálogo de confirmación: <em>"¿Dar de baja a 'X'? La operación es reversible (baja lógica)."</em></li>
+    <li>Click en <strong>"Dar de baja"</strong> → <code>DELETE /api/v1/usuarios/{id}</code>.</li>
+    <li>Toast verde "Usuario dado de baja". La tabla recarga y la fila aparece con badge <span class="badge muted">Inactivo</span>.</li>
+    <li>Para reactivar: editar el usuario, marcar el checkbox <strong>Activo</strong>, guardar.</li>
+  </ol>
+
+  <h3>Errores y troubleshooting comunes</h3>
+  <table>
+    <thead><tr><th>Síntoma</th><th>Causa probable</th><th>Solución</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>No veo el botón "Nuevo"</td>
+        <td>Tu perfil no tiene <code>CREAR /usuarios</code> en <code>submenu_perfil</code></td>
+        <td>Pedir al admin que actualice los permisos en BD o cambiar de perfil</td>
+      </tr>
+      <tr>
+        <td>Toast rojo "Email ya existe"</td>
+        <td>El email ingresado ya está usado por otro usuario activo o inactivo</td>
+        <td>Usar un email distinto, o reactivar el usuario existente</td>
+      </tr>
+      <tr>
+        <td>Toast rojo "Credenciales inválidas (CREDENCIALES_INVALIDAS)"</td>
+        <td>El JWT expiró y el refresh también</td>
+        <td>Volver a hacer login</td>
+      </tr>
+      <tr>
+        <td>Página recargada vuelve a /login</td>
+        <td>localStorage limpio o sesión expirada</td>
+        <td>Login normal; el SPA recordará la URL anterior</td>
+      </tr>
+      <tr>
+        <td>"Usuario bloqueado por intentos fallidos"</td>
+        <td>Se superó <code>parametros.login.intentos.max</code> (default 5)</td>
+        <td>Admin debe entrar a la base y resetear <code>usuarios.intentos_fallidos = 0</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 11. ENDPOINTS ============================== -->
+  <h2 id="endpoints">11. Apéndice: endpoints REST</h2>
+  <p>Todos bajo el prefijo <code>/baqueano/api/v1</code>. Codes de error siguen el formato uniforme del <code>ErrorResponseDTO</code>.</p>
+
+  <h3>Autenticación</h3>
+  <table>
+    <thead><tr><th>Método</th><th>Path</th><th>Acceso</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td>POST</td><td>/auth/login</td><td>público</td><td>Body: <code>{username, password}</code>. Devuelve access + refresh + perfil.</td></tr>
+      <tr><td>POST</td><td>/auth/refresh</td><td>público (con refresh)</td><td>Body: <code>{refreshToken}</code>. Devuelve nuevo access.</td></tr>
+      <tr><td>POST</td><td>/auth/logout</td><td>público (con refresh)</td><td>Revoca el refresh token.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Usuarios (perfil con permisos en <code>/usuarios</code>)</h3>
+  <table>
+    <thead><tr><th>Método</th><th>Path</th><th>Permiso</th><th>Respuesta</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>/usuarios?page=0&amp;size=20</td><td>VER</td><td>Page&lt;UsuarioListItemDTO&gt;</td></tr>
+      <tr><td>GET</td><td>/usuarios/{id}</td><td>VER</td><td>UsuarioResponseDTO</td></tr>
+      <tr><td>POST</td><td>/usuarios</td><td>CREAR</td><td>201 + UsuarioResponseDTO + Location header</td></tr>
+      <tr><td>PUT</td><td>/usuarios/{id}</td><td>EDITAR</td><td>200 + UsuarioResponseDTO</td></tr>
+      <tr><td>DELETE</td><td>/usuarios/{id}</td><td>ELIMINAR</td><td>204 (baja lógica)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Otros recursos</h3>
+  <table>
+    <thead><tr><th>Método</th><th>Path</th><th>Acceso</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td>GET/POST/PUT/DELETE</td><td>/perfiles/**</td><td>permisos en <code>/perfiles</code></td><td>CRUD; borrar bloqueado si tiene usuarios</td></tr>
+      <tr><td>GET/POST/PUT/DELETE</td><td>/parametros/**</td><td>permisos en <code>/parametros</code></td><td>CRUD; update bloqueado si <code>editable=false</code></td></tr>
+      <tr><td>GET</td><td>/parametros/clave/{clave}</td><td>VER</td><td>Lookup directo por clave. Cacheado.</td></tr>
+      <tr><td>POST</td><td>/contactos</td><td><strong>público</strong></td><td>Alta desde formulario externo. <code>ipOrigen</code> capturada del request.</td></tr>
+      <tr><td>GET/PATCH/DELETE</td><td>/contactos/**</td><td>permisos en <code>/contactos</code></td><td>Listar, cambiar estado, eliminar.</td></tr>
+      <tr><td>GET</td><td>/menu/mio</td><td>autenticado</td><td>Árbol Menu→Submenus con permisos del usuario actual.</td></tr>
+      <tr><td>GET</td><td>/dashboard/resumen</td><td>autenticado</td><td>Totales + últimos 5 contactos.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Observabilidad</h3>
+  <table>
+    <thead><tr><th>Método</th><th>Path</th><th>Acceso</th><th>Solo en</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>/actuator/health</td><td>público</td><td>todos los perfiles</td></tr>
+      <tr><td>GET</td><td>/actuator/info</td><td>público</td><td>todos los perfiles</td></tr>
+      <tr><td>GET</td><td>/swagger-ui.html</td><td>público</td><td>dev</td></tr>
+      <tr><td>GET</td><td>/v3/api-docs</td><td>público</td><td>dev</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    Portal Baqueano · v1.0.0 · Reporte generado a partir del estado del repositorio<br/>
+    81 tests backend + 11 tests frontend = 92 tests verdes · WAR 56 MB
+  </div>
+
+  </main>
+</div>
+</body>
+</html>
