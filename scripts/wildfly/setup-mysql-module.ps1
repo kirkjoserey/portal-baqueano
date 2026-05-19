@@ -1,17 +1,21 @@
 # ============================================================
 # Instala el driver MySQL como modulo de WildFly.
 #
-# Lee WILDFLY_HOME de la variable de entorno (o lo recibe como parametro).
-# Copia mysql-connector-j-9.3.0.jar del repositorio Maven local a
-# $WILDFLY_HOME\modules\com\mysql\main\ y deja ahi el module.xml.
+# Detecta automaticamente la version mas alta de mysql-connector-j
+# disponible en el repo Maven local (~/.m2) y genera el module.xml
+# de WildFly apuntando a ese jar. Esto evita hardcodear una version
+# que puede cambiar segun lo que Spring Boot resuelva del BOM.
 #
 # Uso:
 #   .\scripts\wildfly\setup-mysql-module.ps1
+#
+# Para forzar una version puntual:
+#   .\scripts\wildfly\setup-mysql-module.ps1 -DriverVersion 9.7.0
 # ============================================================
 
 param(
     [string]$WildflyHome = $env:WILDFLY_HOME,
-    [string]$DriverVersion = "9.3.0"
+    [string]$DriverVersion = ""
 )
 
 if (-not $WildflyHome) {
@@ -19,22 +23,60 @@ if (-not $WildflyHome) {
     exit 1
 }
 
-$ModuleDir = Join-Path $WildflyHome "modules\com\mysql\main"
-$DriverJar = "mysql-connector-j-$DriverVersion.jar"
-$MavenLocal = Join-Path $env:USERPROFILE ".m2\repository\com\mysql\mysql-connector-j\$DriverVersion\$DriverJar"
-$ScriptDir = $PSScriptRoot
+$ConnectorBase = Join-Path $env:USERPROFILE ".m2\repository\com\mysql\mysql-connector-j"
 
-if (-not (Test-Path $MavenLocal)) {
-    Write-Error "No se encuentra el driver en el repo Maven local: $MavenLocal"
+if (-not (Test-Path $ConnectorBase)) {
+    Write-Error "No se encuentra mysql-connector-j en el repo Maven local: $ConnectorBase"
     Write-Host "Tip: corre 'mvn -pl baqueano-backend dependency:resolve' para descargarlo."
     exit 1
 }
 
+# Si no se especifico version, tomamos la mas alta presente en .m2
+if (-not $DriverVersion) {
+    $LatestDir = Get-ChildItem -Path $ConnectorBase -Directory |
+        Sort-Object { [version]$_.Name } -Descending |
+        Select-Object -First 1
+    if (-not $LatestDir) {
+        Write-Error "No hay subcarpetas de version en $ConnectorBase"
+        exit 1
+    }
+    $DriverVersion = $LatestDir.Name
+    Write-Host "Detectada version: $DriverVersion (usar -DriverVersion para forzar otra)"
+}
+
+$DriverJar = "mysql-connector-j-$DriverVersion.jar"
+$MavenLocal = Join-Path $ConnectorBase "$DriverVersion\$DriverJar"
+
+if (-not (Test-Path $MavenLocal)) {
+    Write-Error "No se encuentra el jar: $MavenLocal"
+    Write-Host "Versiones disponibles en .m2:"
+    Get-ChildItem -Path $ConnectorBase -Directory | Select-Object Name | Format-Table -HideTableHeaders
+    exit 1
+}
+
+$ModuleDir = Join-Path $WildflyHome "modules\com\mysql\main"
 New-Item -ItemType Directory -Force -Path $ModuleDir | Out-Null
 
+# Copiar el jar al modulo de WildFly
 Copy-Item -Path $MavenLocal -Destination (Join-Path $ModuleDir $DriverJar) -Force
-Copy-Item -Path (Join-Path $ScriptDir "module.xml") -Destination (Join-Path $ModuleDir "module.xml") -Force
 
+# Generar module.xml apuntando al jar exacto (sin depender de un template estatico)
+$ModuleXml = @"
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.9" name="com.mysql">
+    <resources>
+        <resource-root path="$DriverJar"/>
+    </resources>
+    <dependencies>
+        <module name="javax.api"/>
+        <module name="javax.transaction.api"/>
+    </dependencies>
+</module>
+"@
+
+Set-Content -Path (Join-Path $ModuleDir "module.xml") -Value $ModuleXml -Encoding UTF8
+
+Write-Host ""
 Write-Host "Modulo com.mysql instalado en: $ModuleDir"
 Write-Host "Contenido:"
 Get-ChildItem $ModuleDir | Format-Table Name, Length
