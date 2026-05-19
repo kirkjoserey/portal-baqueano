@@ -102,14 +102,14 @@ npm install
 npm run dev
 ```
 
-Abrir [http://localhost:5173/](http://localhost:5173/) → login `admin / admin123`.
+Abrir [http://localhost:8080/baqueano](http://localhost:8080/baqueano) → login `admin / admin123`.
 
 ### Observabilidad y docs API (solo en dev)
 
-- **Swagger UI**: [http://localhost:8081/baqueano/swagger-ui.html](http://localhost:8081/baqueano/swagger-ui.html)
-- **OpenAPI JSON**: [http://localhost:8081/baqueano/v3/api-docs](http://localhost:8081/baqueano/v3/api-docs)
-- **Health**: [http://localhost:8081/baqueano/actuator/health](http://localhost:8081/baqueano/actuator/health)
-- **Info (build)**: [http://localhost:8081/baqueano/actuator/info](http://localhost:8081/baqueano/actuator/info)
+- **Swagger UI**: [http://localhost:8080/baqueano/swagger-ui.html](http://localhost:8080/baqueano/swagger-ui.html)
+- **OpenAPI JSON**: [http://localhost:8080/baqueano/v3/api-docs](http://localhost:8080/baqueano/v3/api-docs)
+- **Health**: [http://localhost:8080/baqueano/actuator/health](http://localhost:8080/baqueano/actuator/health)
+- **Info (build)**: [http://localhost:8080/baqueano/actuator/info](http://localhost:8080/baqueano/actuator/info)
 
 En perfil `prod` Swagger queda deshabilitado. `health` e `info` se exponen también.
 
