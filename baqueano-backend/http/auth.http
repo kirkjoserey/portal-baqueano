@@ -90,6 +90,21 @@ Content-Type: application/json
 
 ###
 
+### 7b. Health del actuator (publico)
+GET http://localhost:8081/baqueano/actuator/health
+
+###
+
+### 7c. Info del actuator con build-info (publico)
+GET http://localhost:8081/baqueano/actuator/info
+
+###
+
+### 7d. OpenAPI JSON (solo en dev)
+GET http://localhost:8081/baqueano/v3/api-docs
+
+###
+
 ### 8. Alta publica de contacto (no requiere token)
 POST {{host}}/contactos
 Content-Type: application/json

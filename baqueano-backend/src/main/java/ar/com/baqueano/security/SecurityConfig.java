@@ -49,8 +49,8 @@ public class SecurityConfig {
                         // Endpoints publicos
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/contactos").permitAll()
-                        .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         // API protegida
                         .requestMatchers("/api/v1/**").authenticated()
                         // Resto (estaticos del frontend cuando se sirve desde el WAR)
