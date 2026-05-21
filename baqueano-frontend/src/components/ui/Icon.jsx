@@ -11,6 +11,7 @@ import {
   Trash2,
   Search,
   Eye,
+  Target,
 } from 'lucide-react';
 
 // Mapa de nombres de icono (lo que el backend guarda en submenu.icono) -> componente.
@@ -28,6 +29,7 @@ const REGISTRO = {
   trash: Trash2,
   search: Search,
   eye: Eye,
+  target: Target,
 };
 
 export default function Icon({ name, className = 'h-5 w-5', strokeWidth = 2 }) {

@@ -7,6 +7,7 @@ const TITULOS = {
   '/perfiles': 'Perfiles',
   '/parametros': 'Parámetros',
   '/contactos': 'Contactos',
+  '/prospectos': 'Prospectos',
 };
 
 export default function Header({ onMenuClick }) {

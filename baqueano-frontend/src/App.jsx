@@ -9,6 +9,7 @@ import UsuariosPage from './pages/usuarios/UsuariosPage.jsx';
 import PerfilesPage from './pages/perfiles/PerfilesPage.jsx';
 import ParametrosPage from './pages/parametros/ParametrosPage.jsx';
 import ContactosPage from './pages/contactos/ContactosPage.jsx';
+import ProspectosPage from './pages/prospectos/ProspectosPage.jsx';
 
 // basename: en dev BASE_URL = '/'; en prod (vite build) = '/baqueano/'.
 // React Router quiere basename sin barra final.
@@ -29,6 +30,7 @@ export default function App() {
               <Route path="/perfiles" element={<PerfilesPage />} />
               <Route path="/parametros" element={<ParametrosPage />} />
               <Route path="/contactos" element={<ContactosPage />} />
+              <Route path="/prospectos" element={<ProspectosPage />} />
             </Route>
           </Route>
 
