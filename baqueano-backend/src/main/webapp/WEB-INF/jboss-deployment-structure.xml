@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Excluimos los modulos de logging de WildFly para que Spring Boot use el
-  Logback que viene en WEB-INF/lib. Sin esto vemos warnings como
-  "Failed to load class org.slf4j.impl.StaticLoggerBinder" y los logs duplicados.
+  Configuracion de despliegue para WildFly 39 con Spring Boot 3.5 WAR.
 
-  Tambien excluimos modulos que tipicamente entran en conflicto con las libs
-  embebidas del WAR de Spring Boot 3.x.
+  Por que excluimos estos subsistemas:
+  - logging    : Spring Boot usa Logback propio; sin esto los logs se duplican.
+  - jaxrs      : Spring MVC ya maneja REST; el subsistema JAX-RS de WildFly
+                 intentaria registrar sus propios recursos y colisiona.
+  - webservices: no usamos JAX-WS.
+  - jpa        : CRITICO — WildFly detecta las entidades JPA del WAR y crea
+                 su propio EntityManagerFactory. Esto choca con el de Spring Boot
+                 (LocalContainerEntityManagerFactoryBean / JNDI datasource).
+                 Al excluir este subsistema, WildFly deja que Spring Boot sea
+                 el unico que gestiona JPA/Hibernate en este deployment.
+  - bean-validation: Spring Boot 3.x usa su propia validacion; la de WildFly
+                 puede registrar un Validator duplicado.
+
+  Modulos excluidos:
+  - Los de logging/slf4j se excluyen para que Logback use el JAR embebido
+    en WEB-INF/lib y no el de los modulos del servidor.
+  - org.hibernate.orm.core: WildFly 39 trae Hibernate 6 como modulo global;
+    excluirlo fuerza a que el WAR use el Hibernate embebido por Spring Boot,
+    evitando conflictos de version o configuracion entre ambos.
 -->
 <jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.3">
     <deployment>
@@ -13,6 +28,8 @@
             <subsystem name="logging"/>
             <subsystem name="jaxrs"/>
             <subsystem name="webservices"/>
+            <subsystem name="jpa"/>
+            <subsystem name="bean-validation"/>
         </exclude-subsystems>
         <exclusions>
             <module name="org.apache.log4j"/>
@@ -20,6 +37,7 @@
             <module name="org.slf4j"/>
             <module name="org.slf4j.impl"/>
             <module name="org.jboss.logging.jul-to-slf4j-stub"/>
+            <module name="org.hibernate.orm.core"/>
         </exclusions>
     </deployment>
 </jboss-deployment-structure>
