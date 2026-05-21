@@ -32,12 +32,29 @@
             <subsystem name="bean-validation"/>
         </exclude-subsystems>
         <exclusions>
+            <!-- Logging: Spring Boot usa Logback propio -->
             <module name="org.apache.log4j"/>
             <module name="org.apache.logging.log4j.api"/>
             <module name="org.slf4j"/>
             <module name="org.slf4j.impl"/>
             <module name="org.jboss.logging.jul-to-slf4j-stub"/>
+            <!--
+              Hibernate ORM: WildFly 39 trae su propio Hibernate 6 como modulo
+              global. Lo excluimos para que el WAR use el Hibernate embebido
+              por Spring Boot y evitar conflictos de version.
+            -->
             <module name="org.hibernate.orm.core"/>
+            <!--
+              Hibernate Validator: WildFly registra su propio HV como extension
+              CDI portable (org.hibernate.validator.cdi). Si el WAR tambien
+              trae HV en WEB-INF/lib, Weld intenta cargar la ValidationExtension
+              con el classloader del modulo de WildFly mientras que las clases
+              concretas (AbstractConfigurationImpl) vienen del classloader del WAR.
+              Resultado: LinkageError en POST_MODULE.
+              Al excluir este modulo, el WAR usa solo su propio HV y Weld no
+              encuentra la extension CDI de WildFly => sin conflicto.
+            -->
+            <module name="org.hibernate.validator"/>
         </exclusions>
     </deployment>
 </jboss-deployment-structure>
