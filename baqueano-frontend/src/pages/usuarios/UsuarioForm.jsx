@@ -55,7 +55,7 @@ export default function UsuarioForm({ defaultValues, perfiles, onSubmit, onCance
         </FormField>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Nombre" htmlFor="nombre" error={errors.nombre?.message}>
           <Input id="nombre" {...register('nombre')} />
         </FormField>

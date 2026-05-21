@@ -64,9 +64,9 @@ export default function ParametrosPage() {
   const columns = [
     { key: 'clave', header: 'Clave' },
     { key: 'valor', header: 'Valor' },
-    { key: 'tipoDato', header: 'Tipo', render: (p) => <Badge variant="info">{p.tipoDato}</Badge> },
+    { key: 'tipoDato', header: 'Tipo', hideOnMobile: true, render: (p) => <Badge variant="info">{p.tipoDato}</Badge> },
     {
-      key: 'editable', header: 'Editable',
+      key: 'editable', header: 'Editable', hideOnMobile: true,
       render: (p) => <Badge variant={p.editable ? 'success' : 'muted'}>{p.editable ? 'Si' : 'No'}</Badge>,
     },
     {

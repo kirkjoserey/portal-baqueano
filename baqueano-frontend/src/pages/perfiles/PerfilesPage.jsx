@@ -61,7 +61,7 @@ export default function PerfilesPage() {
 
   const columns = [
     { key: 'nombre', header: 'Nombre' },
-    { key: 'descripcion', header: 'Descripcion' },
+    { key: 'descripcion', header: 'Descripcion', hideOnMobile: true },
     {
       key: 'activo', header: 'Estado',
       render: (p) => <Badge variant={p.activo ? 'success' : 'muted'}>{p.activo ? 'Activo' : 'Inactivo'}</Badge>,

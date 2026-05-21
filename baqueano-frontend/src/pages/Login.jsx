@@ -41,7 +41,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg-app px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-card p-8">
+        <div className="bg-white rounded-lg shadow-card p-5 sm:p-8">
           <div className="flex flex-col items-center mb-8">
             <div className="bg-primary rounded-md p-3 mb-3">
               <Zap className="h-7 w-7 text-white" strokeWidth={2.5} />

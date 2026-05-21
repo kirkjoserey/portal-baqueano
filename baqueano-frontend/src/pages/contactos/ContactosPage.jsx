@@ -57,13 +57,13 @@ export default function ContactosPage() {
         <div className="text-text-muted text-xs">{c.email}</div>
       </div>
     )},
-    { key: 'asunto', header: 'Asunto', render: (c) => c.asunto ?? <span className="text-text-muted/60">—</span> },
+    { key: 'asunto', header: 'Asunto', hideOnMobile: true, render: (c) => c.asunto ?? <span className="text-text-muted/60">—</span> },
     {
       key: 'estado', header: 'Estado',
       render: (c) => <Badge variant={badgeFor(c.estado)}>{c.estado}</Badge>,
     },
     {
-      key: 'fechaCreacion', header: 'Recibido',
+      key: 'fechaCreacion', header: 'Recibido', hideOnMobile: true,
       render: (c) => new Date(c.fechaCreacion).toLocaleDateString('es-AR'),
     },
     {
@@ -85,7 +85,7 @@ export default function ContactosPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold text-text-strong">Contactos</h1>
         <div className="flex items-center gap-2">
           <label htmlFor="estado-filtro" className="text-text-muted text-sm">Estado:</label>

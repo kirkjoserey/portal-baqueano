@@ -75,9 +75,9 @@ export default function UsuariosPage() {
 
   const columns = [
     { key: 'username', header: 'Usuario' },
-    { key: 'email', header: 'Email' },
+    { key: 'email', header: 'Email', hideOnMobile: true },
     { key: 'nombreCompleto', header: 'Nombre', render: (u) => `${u.nombre} ${u.apellido}` },
-    { key: 'perfilNombre', header: 'Perfil' },
+    { key: 'perfilNombre', header: 'Perfil', hideOnMobile: true },
     {
       key: 'activo', header: 'Estado',
       render: (u) => <Badge variant={u.activo ? 'success' : 'muted'}>{u.activo ? 'Activo' : 'Inactivo'}</Badge>,

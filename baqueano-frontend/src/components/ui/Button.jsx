@@ -8,9 +8,10 @@ const VARIANTS = {
 };
 
 const SIZES = {
-  sm: 'px-3 py-1.5 text-xs',
-  md: 'px-4 py-2 text-sm',
-  icon: 'p-2',
+  sm:   'px-3 py-1.5 text-xs min-h-[36px]',
+  md:   'px-4 py-2 text-sm min-h-[40px]',
+  /* icon: minimo 44x44 px para que el touch target sea accesible en mobile */
+  icon: 'p-2 min-h-[44px] min-w-[44px] justify-center',
 };
 
 export default function Button({ variant = 'primary', size = 'md', className = '', children, ...rest }) {

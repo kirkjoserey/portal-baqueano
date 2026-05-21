@@ -32,7 +32,7 @@ export default function ContactoDetalleModal({ open, contacto, onClose, onChange
   return (
     <Modal open={open} title="Detalle de contacto" onClose={onClose} size="lg">
       <div className="space-y-4 text-sm">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <div className="text-text-muted text-xs">Nombre</div>
             <div className="font-medium text-text-strong">{contacto.nombre}</div>
@@ -64,7 +64,7 @@ export default function ContactoDetalleModal({ open, contacto, onClose, onChange
 
         <div>
           <div className="text-text-muted text-xs mb-1">Mensaje</div>
-          <div className="bg-bg-app rounded-md p-4 text-text-strong whitespace-pre-wrap">{contacto.mensaje}</div>
+          <div className="bg-bg-app rounded-md p-4 text-text-strong whitespace-pre-wrap break-words">{contacto.mensaje}</div>
         </div>
 
         <div className="flex items-center gap-3">
