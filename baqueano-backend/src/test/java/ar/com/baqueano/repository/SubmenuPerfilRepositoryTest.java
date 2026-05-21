@@ -25,9 +25,9 @@ class SubmenuPerfilRepositoryTest {
     private SubmenuPerfilRepository repo;
 
     @Test
-    void findByPerfilId_admin_devuelve_los_5_permisos() {
+    void findByPerfilId_admin_devuelve_los_6_permisos() {
         List<SubmenuPerfil> permisos = repo.findByPerfilId(1L);
-        assertThat(permisos).hasSize(5);
+        assertThat(permisos).hasSize(6);
         assertThat(permisos).allSatisfy(sp -> {
             assertThat(sp.getPuedeVer()).isTrue();
             assertThat(sp.getPuedeCrear()).isTrue();

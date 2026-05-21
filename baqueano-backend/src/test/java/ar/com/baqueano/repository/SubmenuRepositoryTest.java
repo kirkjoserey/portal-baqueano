@@ -28,12 +28,12 @@ class SubmenuRepositoryTest {
     private SubmenuRepository repo;
 
     @Test
-    void findMenuPorPerfil_admin_ve_los_5_submenus_en_orden() {
+    void findMenuPorPerfil_admin_ve_los_6_submenus_en_orden() {
         List<Submenu> menus = repo.findMenuPorPerfil(ADMIN_PERFIL_ID);
 
-        assertThat(menus).hasSize(5);
+        assertThat(menus).hasSize(6);
         assertThat(menus).extracting(Submenu::getRuta)
-                .containsExactly("/dashboard", "/parametros", "/usuarios", "/perfiles", "/contactos");
+                .containsExactly("/dashboard", "/parametros", "/usuarios", "/perfiles", "/contactos", "/prospectos");
     }
 
     @Test
